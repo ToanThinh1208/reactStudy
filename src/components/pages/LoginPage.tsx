@@ -1,5 +1,5 @@
 import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import { useAuthStore } from "../../stores/Auth.store";
 import { authApi } from "../../lib/api/auth.api";
 
@@ -82,6 +82,12 @@ function LoginPage() {
           Sign In
         </button>
       </form>
+      <div className="mt-4 text-center">
+        <span className="text-gray-600">Chưa có tài khoản? </span>
+        <Link to="/register" className="text-blue-500 hover:underline">
+          Đăng ký ngay
+        </Link>
+      </div>
     </div>
   );
 }

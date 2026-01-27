@@ -30,7 +30,7 @@ function MainLayout() {
                   className={({ isActive }) =>
                     isActive
                       ? "text-yellow-300 font-bold underline"
-                      : "text-yellow-200 font-bold"
+                      : "text-blue-200 font-bold"
                   }
                 >
                   Profile
@@ -45,10 +45,20 @@ function MainLayout() {
                   className={({ isActive }) =>
                     isActive
                       ? "text-yellow-300 font-bold underline"
-                      : "text-yellow-200 font-bold"
+                      : "text-blue-200 font-bold"
                   }
                 >
                   Login
+                </NavLink>
+                <NavLink
+                  to="register"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "text-yellow-300 font-bold underline"
+                      : "text-blue-200 font-bold"
+                  }
+                >
+                  Register
                 </NavLink>
               </>
             )}

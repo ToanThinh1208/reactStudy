@@ -13,6 +13,18 @@ export interface User {
   //... other user fields
 }
 
+export interface RegisterDto {
+  fullName: string;
+  email: string;
+  password: string;
+}
+
+export interface RegisterResponse {
+  _id: string;
+  fullName: string;
+  email: string;
+}
+
 export const authApi = {
   // Login function
   async login(credentials: {
@@ -33,5 +45,10 @@ export const authApi = {
     const responseBody = await apiClient.get("/user/me");
     console.log(responseBody);
     return responseBody.data; // Giả sử backend trả về user trong data.data
+  },
+
+  async register(data: RegisterDto): Promise<RegisterResponse> {
+    const response = await apiClient.post("/auth/register", data);
+    return response as unknown as RegisterResponse;
   },
 };
