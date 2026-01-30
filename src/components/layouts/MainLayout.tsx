@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink, Outlet, replace, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../stores/Auth.store";
 import Header from "./Header";
-import { Toaster } from "sonner";
+import { Toaster } from "../UI/sonner";
 
 function MainLayout() {
   return (

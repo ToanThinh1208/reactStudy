@@ -13,6 +13,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
 
   return (
     <Sonner
+      richColors // Tự động đổi màu background theo type 
       theme={theme as ToasterProps["theme"]}
       className="toaster group"
       icons={{
