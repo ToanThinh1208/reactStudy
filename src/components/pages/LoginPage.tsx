@@ -4,7 +4,8 @@ import { useAuthStore } from "../../stores/Auth.store";
 import { authApi } from "../../lib/api/auth.api";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/UI/card";
 import { Button } from "../UI/button";
-import { Loader2 } from "lucide-react";
+import { Loader2, Mail, Lock } from "lucide-react";
+import { toast } from "sonner";
 
 function LoginPage() {
   const [email, setEmail] = React.useState("thichcungkiengg@gmail.com");
@@ -26,12 +27,14 @@ function LoginPage() {
       const tokens = await authApi.login({ email, password });
       // Lưu tokens vào Zustand store
       setTokens(tokens.accessToken, tokens.refreshToken);
+      toast.success("Login thành công");
       // console.log("Login thành công");
       navigate(from, { replace: true });
     } catch (err: any) {
       console.error(err);
       setError(
         err.response?.data?.message || "Login failed. Please try again.");
+      toast.error(err.response?.data?.message || "Login failed. Please try again.");
       }finally {
         setLoading(false);
       };
@@ -40,7 +43,8 @@ function LoginPage() {
   
   return (
     <>
-      <div className="flex items-center justify-center min-h-screen from-stone-50 to-slate-100">
+      <div className="flex items-center justify-center min-h-screen bg-linear-to-br from-stone-50 to-slate-100 dark:bg-none">
+        {/* dark:bg-none là khi dark mode thì không có màu nền */}
         <Card className=" w-full max-w-md shadow-lg">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl">Welcome Back</CardTitle>
@@ -49,7 +53,8 @@ function LoginPage() {
           <CardContent>
             <form onSubmit={handleLogin} className="flex flex-col gap-4">
               <div className="space-y-2">
-                <label htmlFor="email" className="block text-sm font-medium">
+                <label htmlFor="email" className="flex items-center gap-2 text-sm font-medium">
+                  <Mail className="w-4 h-4" />
                   Email
                 </label>
                 <input
@@ -63,8 +68,9 @@ function LoginPage() {
               </div>
               
               <div className="space-y-2">
-                <label htmlFor="password" className="block text-sm font-medium">
-                  Email
+                <label htmlFor="password" className="flex items-center gap-2 text-sm font-medium">
+                  <Lock className="w-4 h-4" />
+                  Password
                 </label>
                 <input
                   type="password"

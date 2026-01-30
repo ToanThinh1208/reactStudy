@@ -3,7 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { authApi } from "../../lib/api/auth.api";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/UI/card";
 import { Button } from "../UI/button";
-import { Loader2 } from "lucide-react";
+import { Loader2, User, Mail, Lock } from "lucide-react";
+import { toast } from "sonner";
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -21,10 +22,13 @@ const RegisterPage: React.FC = () => {
     try {
       const response = await authApi.register(formData);
       console.log("Registration success:", response);
+      toast.success("Đăng ký thành công! Vui lòng đăng nhập.");
       navigate("/login");
     } catch (err: any) {
       console.error("Registration error:", err);
-      setError("Đăng ký thất bại, vui lòng thử lại");
+      const errorMessage = err.response?.data?.message || "Đăng ký thất bại, vui lòng thử lại";
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -36,7 +40,7 @@ const RegisterPage: React.FC = () => {
 
   return (
     <>
-      <div className="flex items-center justify-center min-h-screen from-stone-50 to-slate-100">
+      <div className="flex items-center justify-center min-h-screen bg-linear-to-br from-stone-50 to-slate-100 dark:bg-none">
         <Card className=" w-full max-w-md shadow-lg">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl">Đăng ký tài khoản</CardTitle>
@@ -45,7 +49,8 @@ const RegisterPage: React.FC = () => {
           <CardContent>
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               <div className="space-y-2">
-                <label htmlFor="email" className="block text-sm font-medium">
+                <label htmlFor="fullName" className="flex items-center gap-2 text-sm font-medium">
+                  <User className="w-4 h-4" />
                   HỌ VÀ TÊN
                 </label>
                 <input
@@ -59,7 +64,8 @@ const RegisterPage: React.FC = () => {
                 />
               </div>
               <div className="space-y-2">
-                <label htmlFor="email" className="block text-sm font-medium">
+                <label htmlFor="email" className="flex items-center gap-2 text-sm font-medium">
+                  <Mail className="w-4 h-4" />
                   Email
                 </label>
                 <input
@@ -74,8 +80,9 @@ const RegisterPage: React.FC = () => {
               </div>
               
               <div className="space-y-2">
-                <label htmlFor="password" className="block text-sm font-medium">
-                  Email
+                <label htmlFor="password" className="flex items-center gap-2 text-sm font-medium">
+                  <Lock className="w-4 h-4" />
+                  Password
                 </label>
                 <input
                   type="password"
@@ -87,6 +94,9 @@ const RegisterPage: React.FC = () => {
                   className="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
+              
+              {error && <div className="text-destructive text-sm text-center">{error}</div>}
+
               <Button type="submit" className="w-full" disabled={loading}>
               {/* {loading ? "Đang xử lý" : "Đăng ký"} */}
               {loading ? <Loader2 className="animate-spin mr-2 h-4 w-4" /> : "Đăng nhập"}
