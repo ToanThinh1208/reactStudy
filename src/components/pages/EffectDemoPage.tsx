@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { ErrorState, StatusState } from "../UI/StatusState";
+import { ErrorState, LoadingState } from "../UI/StatusState";
 
 function EffectDemoPage() {
   const [count, setCount] = useState(0);
-  const [userId, setUserId] = useState(1);
+
   const [user, setUser] = useState<{ name: string; email: string } | null>(
     null,
   );
@@ -45,7 +45,7 @@ function EffectDemoPage() {
       </button>
 
       {loading ? (
-        <StatusState />
+        <LoadingState />
       ) : user ? (
         <div>
           <p>User Info</p>

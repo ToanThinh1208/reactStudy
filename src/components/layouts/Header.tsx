@@ -65,6 +65,19 @@ const Header = () => {
                   </NavigationMenuLink>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
+                  <NavigationMenuLink
+                    onClick={() => navigate("/rituals")}
+                    className={cn(
+                      "text-sm font-medium transition-colors hover:text-primary px-3 py-2 rounded-md cursor-pointer",
+                      isActive("/rituals")
+                        ? "text-primary font-semibold bg-accent"
+                        : "text-muted-foreground",
+                    )}
+                  >
+                    Nghi thức
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
                   <Button variant="outline" size="sm" onClick={handleLogout}>
                     Đăng xuất
                   </Button>
@@ -96,12 +109,10 @@ const Header = () => {
                 </NavigationMenuItem>
               </>
             )}
-            <ModeToggle/>
+            <ModeToggle />
           </NavigationMenuList>
         </NavigationMenu>
-        
       </div>
-        
     </header>
   );
 };

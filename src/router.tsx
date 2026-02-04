@@ -1,4 +1,3 @@
-import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 import HomePage from "./components/pages/HomePage";
 import LoginPage from "./components/pages/LoginPage";
@@ -7,6 +6,7 @@ import RequireAuth from "./components/guards/RequireAuth";
 import ProfilePage from "./components/pages/ProfilePage";
 import GuestGuard from "./components/guards/GuestGuard";
 import RegisterPage from "./components/pages/RegisterPageRHF";
+import RitualPage from "./components/pages/RitualPage";
 
 const router = createBrowserRouter([
   {
@@ -17,6 +17,7 @@ const router = createBrowserRouter([
         index: true,
         element: <HomePage />,
       },
+
       {
         element: <GuestGuard />,
         children: [
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
           {
             path: "profile",
             element: <ProfilePage />,
+          },
+          {
+            path: "rituals",
+            element: <RitualPage />,
           },
         ],
       },

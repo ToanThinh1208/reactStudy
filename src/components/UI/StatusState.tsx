@@ -1,13 +1,15 @@
 import React from "react";
 
-export const StatusState = () => {
-  return <div>Please wait a moment...</div>;
+export const LoadingState = () => {
+  return <div>Loading...</div>;
 };
 
 export const ErrorState = ({
   message = "Đã có lỗi xảy ra",
+  onRetry,
 }: {
   message?: string;
+  onRetry?: () => void;
 }) => {
   return (
     <div>
@@ -16,10 +18,23 @@ export const ErrorState = ({
 
       <button
         className="px-4 py-2 bg-red-500 text-white rounded"
-        onClick={() => window.location.reload()}
+        onClick={onRetry}
       >
-        Try again
+        Retry Connection
       </button>
+    </div>
+  );
+};
+
+export const EmptyState = ({
+  message = "No data available",
+}: {
+  message?: string;
+}) => {
+  return (
+    <div>
+      <p>Empty Data</p>
+      <p>{message}</p>
     </div>
   );
 };
