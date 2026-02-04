@@ -5,9 +5,8 @@ import LoginPage from "./components/pages/LoginPage";
 import App from "./App";
 import RequireAuth from "./components/guards/RequireAuth";
 import ProfilePage from "./components/pages/ProfilePage";
-
 import GuestGuard from "./components/guards/GuestGuard";
-import RegisterPage from "./components/pages/RegisterPage";
+import RegisterPage from "./components/pages/RegisterPageRHF";
 
 const router = createBrowserRouter([
   {

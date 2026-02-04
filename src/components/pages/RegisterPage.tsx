@@ -1,24 +1,59 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { authApi } from "../../lib/api/auth.api";
+import { authApi, type RegisterDto } from "../../lib/api/auth.api";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/UI/card";
 import { Button } from "../UI/button";
 import { Loader2, User, Mail, Lock } from "lucide-react";
 import { toast } from "sonner";
 const RegisterPage: React.FC = () => {
+  console.log("Render nè ku");
+  
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
+  
+  const [formData, setFormData] = useState<RegisterDto>({
     fullName: "",
     email: "",
     password: "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [validationErrors, setValidaionErrors] = useState<{
+    fullName?: string;
+    email?: string;
+    password?: string;
+  }>({});
 
+  const validateForm = (): boolean => {
+    const errors: typeof validationErrors = {};
+    // Tạo ra object dùng để lưu lỗi tránh việc react re-render component lại nhiều lần
+    if (!formData.fullName.trim()) {
+      errors.fullName = "Họ và tên không được để trống";
+    } else if (formData.fullName.length < 3) {
+      errors.fullName = "Họ và tên phải có ít nhất 3 ký tự";
+    }
+    if (!formData.email.trim()) {
+      errors.email = "Email không được để trống";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      errors.email = "Email không hợp lệ";
+    }
+    if (!formData.password.trim()) {
+      errors.password = "Mật khẩu không được để trống";
+    } else if (formData.password.length < 6) {
+      errors.password = "Mật khẩu phải có ít nhất 6 ký tự";
+    }
+    setValidaionErrors(errors);
+    //mảng Error gồm key và value -> ví dụ [{fullName: "Họ và tên không được để trống"},...]
+    return Object.keys(errors).length === 0; // Return true if no errors
+  };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    //Nếu validateForm() trả về false -> có lỗi
+    if (!validateForm()) {
+      return;
+    }
     setLoading(true);
     setError(null);
+
     try {
       const response = await authApi.register(formData);
       console.log("Registration success:", response);
@@ -34,8 +69,13 @@ const RegisterPage: React.FC = () => {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+// Hàm dùng để update state -> phân rã thg ban đầu và dán đè dữ liệu mới lên
+ const handleChange = (field: keyof RegisterDto, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    //xóa lỗi khi re render
+    if (validationErrors[field]) {
+      setValidaionErrors((prev) => ({ ...prev, [field]: undefined }));
+    }
   };
 
   return (
@@ -58,10 +98,17 @@ const RegisterPage: React.FC = () => {
                   id="fullName"
                   name="fullName"
                   value={formData.fullName}
-                  onChange={handleChange}
-                  required
+                  placeholder="Nguyễn Văn A"
+                  // e là event
+                  onChange={(e) => handleChange("fullName", e.target.value)}
+                  // required -> tự động validate khi chưa submit
                   className="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
+                {validationErrors.fullName && (
+                  <p className="text-destructive text-sm mt-1">
+                    {validationErrors.fullName}
+                  </p>
+                )}
               </div>
               <div className="space-y-2">
                 <label htmlFor="email" className="flex items-center gap-2 text-sm font-medium">
@@ -73,10 +120,16 @@ const RegisterPage: React.FC = () => {
                   id="email"
                   name="email"
                   value={formData.email}
-                  onChange={handleChange}
-                  required
+                  placeholder="nguyenvana@gmail.com"
+                  onChange={(e) => handleChange("email", e.target.value)}
+                  // required
                   className="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
+                {validationErrors.email && (
+                  <p className="text-destructive text-sm mt-1">
+                    {validationErrors.email}
+                  </p>
+                )}
               </div>
               
               <div className="space-y-2">
@@ -89,10 +142,16 @@ const RegisterPage: React.FC = () => {
                   id="password"
                   name="password"
                   value={formData.password}
-                  onChange={handleChange}
-                  required
+                  placeholder="**********"
+                  onChange={(e) => handleChange("password", e.target.value)}
+                  // required
                   className="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
+                {validationErrors.password && (
+                  <p className="text-destructive text-sm mt-1">
+                    {validationErrors.password}
+                  </p>
+                )}  
               </div>
               
               {error && <div className="text-destructive text-sm text-center">{error}</div>}
