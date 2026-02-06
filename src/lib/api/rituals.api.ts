@@ -50,7 +50,7 @@ export const ritualsApi = {
   async getRituals(): Promise<RitualResponse> {
     const response = await apiClient.get("/ritual");
     console.log(response.data);
-    return response.data;
+    return response.data.data;
   },
 
   // async getRitualBySlug(slug: string): Promise<Ritual> {

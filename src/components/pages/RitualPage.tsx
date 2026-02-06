@@ -14,7 +14,7 @@ import type { Ritual } from "@/lib/api/rituals.api";
 
 const RitualPage = () => {
   const {
-    data: response,
+    data: rituals,
     isLoading,
     isError,
     error,
@@ -23,7 +23,7 @@ const RitualPage = () => {
   } = useRituals();
 
   // Extract rituals list from the response structure
-  console.log("RitualPage response:", response);
+  // console.log("RitualPage response:", response);
 
   // Robustly find the array
   // let ritualsData: Ritual[] = [];
@@ -38,7 +38,7 @@ const RitualPage = () => {
   //     ritualsData = response.data.data;
   //   }
   // }
-  const rituals = response?.data;
+  // const rituals = response?.data;
   // const rituals = ritualsData;
 
   if (isLoading) {
