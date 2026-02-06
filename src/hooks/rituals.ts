@@ -1,10 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { authApi } from "@/lib/api/auth.api";
-import ritualsApi from "@/lib/api/rituals.api";
+import ritualsApi, { type RitualResponse } from "@/lib/api/rituals.api";
 
 export const useRituals = () => {
-  return useQuery({
-    // queryKey là bắt buộc
+  return useQuery<RitualResponse>({
     queryKey: ["rituals"],
     // Key = Id của cache
     // cùng key = chung cache
