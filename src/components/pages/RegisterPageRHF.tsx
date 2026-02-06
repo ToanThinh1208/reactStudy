@@ -98,6 +98,7 @@ const RegisterPage: React.FC = () => {
                   type="email"
                   id="email"
                   placeholder="nguyenvana@gmail.com"
+                  // required -> validate form của trình duyệt
                   {...register("email")}
                   className="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
