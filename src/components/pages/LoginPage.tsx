@@ -2,15 +2,21 @@ import React from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { useAuthStore } from "../../stores/Auth.store";
 import { authApi } from "../../lib/api/auth.api";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/UI/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/UI/card";
 import { Button } from "../UI/button";
 import { Loader2, Mail, Lock } from "lucide-react";
 import { toast } from "sonner";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema, type LoginSchemaType } from "@/utils/rules";
 
 function LoginPage() {
-  const [email, setEmail] = React.useState("thichcungkiengg@gmail.com");
-  const [password, setPassword] = React.useState("password123");
-  const [error, setError] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState(false);
 
   const navigate = useNavigate();
@@ -19,71 +25,108 @@ function LoginPage() {
 
   const setTokens = useAuthStore((state: any) => state.setTokens);
 
-  const handleLogin = async (e: React.FormEvent) => {
-      setLoading(true);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginSchemaType>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "thichcungkiengg@gmail.com",
+      password: "password123",
+    },
+  });
 
+  const onSubmit = async (data: LoginSchemaType) => {
+    setLoading(true);
     try {
-      e.preventDefault();
-      const tokens = await authApi.login({ email, password });
-      // Lưu tokens vào Zustand store
+      // Giả sử API login nhận { email, password }
+      const tokens = await authApi.login({
+        email: data.email,
+        password: data.password,
+      });
       setTokens(tokens.accessToken, tokens.refreshToken);
       toast.success("Login thành công");
-      // console.log("Login thành công");
       navigate(from, { replace: true });
     } catch (err: any) {
       console.error(err);
-      setError(
-        err.response?.data?.message || "Login failed. Please try again.");
-      toast.error(err.response?.data?.message || "Login failed. Please try again.");
-      }finally {
-        setLoading(false);
-      };
+      toast.error(
+        err.response?.data?.message || "Login failed. Please try again.",
+      );
+    } finally {
+      setLoading(false);
+    }
   };
-  // console.log(loading);
-  
+
   return (
     <>
       <div className="flex items-center justify-center min-h-screen bg-linear-to-br from-stone-50 to-slate-100 dark:bg-none">
-        {/* dark:bg-none là khi dark mode thì không có màu nền */}
         <Card className=" w-full max-w-md shadow-lg">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl">Welcome Back</CardTitle>
-            <CardDescription>Học Axios Interceptor</CardDescription>
+            <CardDescription>Basic Form</CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleLogin} className="flex flex-col gap-4">
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="flex flex-col gap-4"
+            >
               <div className="space-y-2">
-                <label htmlFor="email" className="flex items-center gap-2 text-sm font-medium">
+                <label
+                  htmlFor="email"
+                  className="flex items-center gap-2 text-sm font-medium"
+                >
                   <Mail className="w-4 h-4" />
                   Email
                 </label>
                 <input
                   type="email"
                   id="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
+                  {...register("email")}
                   className="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
+                {errors.email && (
+                  <p className="text-destructive text-sm mt-1">
+                    {errors.email.message}
+                  </p>
+                )}
               </div>
-              
+
               <div className="space-y-2">
-                <label htmlFor="password" className="flex items-center gap-2 text-sm font-medium">
+                <label
+                  htmlFor="password"
+                  className="flex items-center gap-2 text-sm font-medium"
+                >
                   <Lock className="w-4 h-4" />
                   Password
                 </label>
                 <input
                   type="password"
                   id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
+                  {...register("password")}
                   className="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
+                {errors.password && (
+                  <p className="text-destructive text-sm mt-1">
+                    {errors.password.message}
+                  </p>
+                )}
               </div>
+
+              <div className="flex items-center gap-2">
+                <input type="checkbox" id="rememberMe" className="w-4 h-4" />
+                <label htmlFor="rememberMe" className="text-sm font-medium">
+                  Remember me
+                </label>
+              </div>
+
               <Button type="submit" className="w-full" disabled={loading}>
-              {/* {loading ? "Đang xử lý" : "Đăng ký"} */}
-              {loading ? <Loader2 className="animate-spin mr-2 h-4 w-4" /> : "Đăng nhập"}
+                {/* {loading ? "Đang xử lý" : "Đăng ký"} */}
+                {loading ? (
+                  <Loader2 className="animate-spin mr-2 h-4 w-4" />
+                ) : (
+                  "Đăng nhập"
+                )}
               </Button>
 
               <div className="text-center text-sm">

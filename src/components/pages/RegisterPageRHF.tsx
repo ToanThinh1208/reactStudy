@@ -31,6 +31,7 @@ const RegisterPage: React.FC = () => {
       email: "",
       password: "",
       confirmPassword: "",
+      date_of_birth: new Date(),
     },
   });
   //hàm này gọi sau khi validate thành công
@@ -147,6 +148,27 @@ const RegisterPage: React.FC = () => {
                 {errors.confirmPassword && (
                   <p className="text-destructive text-sm mt-1">
                     {errors.confirmPassword.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <label
+                  htmlFor="date_of_birth"
+                  className="flex items-center gap-2 text-sm font-medium"
+                >
+                  <User className="w-4 h-4" />
+                  Ngày sinh
+                </label>
+                <input
+                  type="date"
+                  id="date_of_birth"
+                  {...register("date_of_birth")}
+                  className="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                {errors.date_of_birth && (
+                  <p className="text-destructive text-sm mt-1">
+                    {errors.date_of_birth.message}
                   </p>
                 )}
               </div>
