@@ -51,4 +51,8 @@ export const authApi = {
     const response = await apiClient.post("/auth/register", data);
     return response as unknown as RegisterResponse;
   },
+
+  async logout() {
+    await apiClient.post("/auth/logout");
+  },
 };

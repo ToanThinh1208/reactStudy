@@ -12,10 +12,13 @@ import { Button } from "../UI/button";
 import { Loader2, User, Mail, Lock } from "lucide-react";
 import { toast } from "sonner";
 import { registerSchema, type RegisterSchemaType } from "@/utils/rules";
-import { useForm } from "react-hook-form";
+import { useForm, type SubmitHandler, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRegisterMutation } from "@/hooks/useAuthMutation";
+
 const RegisterPage: React.FC = () => {
   console.log("Render nè ku");
+  const registerMutation = useRegisterMutation();
   const navigate = useNavigate();
   const {
     register, //thay thế cho onChange, value
@@ -24,7 +27,7 @@ const RegisterPage: React.FC = () => {
   } = useForm<RegisterSchemaType>({
     mode: "onTouched", //chế độ của form: onBlur, onChange, onSubmit, onTouched
     //resovler: kết nối zod với react hook form
-    resolver: zodResolver(registerSchema),
+    resolver: zodResolver(registerSchema) as Resolver<RegisterSchemaType>,
     //defaultValues: giá trị mặc định của form
     defaultValues: {
       fullName: "",
@@ -34,21 +37,12 @@ const RegisterPage: React.FC = () => {
       date_of_birth: new Date(),
     },
   });
-  //hàm này gọi sau khi validate thành công
-  const onSubmit = async (data: RegisterSchemaType) => {
-    console.log(data);
 
-    try {
-      const response = await authApi.register(data);
-      console.log("Registration success:", response);
-      toast.success("Đăng ký thành công! Vui lòng đăng nhập.");
-      navigate("/login");
-    } catch (err: any) {
-      console.error("Registration error:", err);
-      const errorMessage =
-        err.response?.data?.message || "Đăng ký thất bại, vui lòng thử lại";
-      toast.error(errorMessage);
-    }
+  //hàm này gọi sau khi validate thành công
+  //hàm này gọi sau khi validate thành công
+  const onSubmit: SubmitHandler<RegisterSchemaType> = async (data) => {
+    console.log(data);
+    registerMutation.mutate(data);
   };
 
   return (
@@ -62,7 +56,7 @@ const RegisterPage: React.FC = () => {
           <CardContent>
             {/* hàm handleSubmit do RHF */}
             <form
-              onSubmit={handleSubmit(onSubmit)}
+              onSubmit={(e) => handleSubmit(onSubmit)(e)}
               className="flex flex-col gap-4"
             >
               <div className="space-y-2">
@@ -174,8 +168,12 @@ const RegisterPage: React.FC = () => {
                 )}
               </div>
 
-              <Button type="submit" className="w-full" disabled={isSubmitting}>
-                {isSubmitting ? (
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={isSubmitting || registerMutation.isPending}
+              >
+                {isSubmitting || registerMutation.isPending ? (
                   <Loader2 className="animate-spin mr-2 h-4 w-4" />
                 ) : (
                   "Đăng ký"

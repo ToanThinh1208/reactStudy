@@ -9,17 +9,14 @@ import {
 } from "../UI/navigation-menu";
 import { cn } from "@/lib/utils";
 import { ModeToggle } from "../mode-toggle";
+import { useLogoutMutation } from "@/hooks/useAuthMutation";
 
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { accessToken, clearTokens } = useAuthStore();
   const isLoggedIn = !!accessToken;
-
-  const handleLogout = () => {
-    clearTokens();
-    navigate("/", { replace: true });
-  };
+  const logoutMutation = useLogoutMutation();
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -78,7 +75,11 @@ const Header = () => {
                   </NavigationMenuLink>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
-                  <Button variant="outline" size="sm" onClick={handleLogout}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => logoutMutation.mutate()}
+                  >
                     Đăng xuất
                   </Button>
                 </NavigationMenuItem>

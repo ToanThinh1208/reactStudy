@@ -1,6 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { authApi } from "@/lib/api/auth.api";
 import ritualsApi, { type RitualResponse } from "@/lib/api/rituals.api";
+import { toast } from "sonner";
 
 export const useRituals = () => {
   return useQuery<RitualResponse>({
@@ -37,5 +38,20 @@ export const useRituals = () => {
     //refetchInterval: 10000, // 10s
     // Tự động refetch sau mỗi 10s
     //
+  });
+};
+
+export const useDeleteRitualMutaion = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => ritualsApi.deleteRitual(id),
+    onSuccess: () => {
+      //dùng để cho data này thành bị cũ
+      queryClient.invalidateQueries({ queryKey: ["rituals"] });
+      toast.success("Xóa thành công");
+    },
+    onError: (err: any) => {
+      toast.error(err.response?.data?.message || "Xóa thất bại");
+    },
   });
 };

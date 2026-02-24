@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type LoginSchemaType } from "@/utils/rules";
+import { useLoginMutation } from "@/hooks/useAuthMutation";
 
 function LoginPage() {
   const [loading, setLoading] = React.useState(false);
@@ -24,7 +25,7 @@ function LoginPage() {
   const from = location.state?.from?.pathname || "/";
 
   const setTokens = useAuthStore((state: any) => state.setTokens);
-
+  const loginMutation = useLoginMutation();
   const {
     register,
     handleSubmit,
@@ -38,24 +39,25 @@ function LoginPage() {
   });
 
   const onSubmit = async (data: LoginSchemaType) => {
-    setLoading(true);
-    try {
-      // Giả sử API login nhận { email, password }
-      const tokens = await authApi.login({
-        email: data.email,
-        password: data.password,
-      });
-      setTokens(tokens.accessToken, tokens.refreshToken);
-      toast.success("Login thành công");
-      navigate(from, { replace: true });
-    } catch (err: any) {
-      console.error(err);
-      toast.error(
-        err.response?.data?.message || "Login failed. Please try again.",
-      );
-    } finally {
-      setLoading(false);
-    }
+    // setLoading(true);
+    // try {
+    //   // Giả sử API login nhận { email, password }
+    //   const tokens = await authApi.login({
+    //     email: data.email,
+    //     password: data.password,
+    //   });
+    //   setTokens(tokens.accessToken, tokens.refreshToken);
+    //   toast.success("Login thành công");
+    //   navigate(from, { replace: true });
+    // } catch (err: any) {
+    //   console.error(err);
+    //   toast.error(
+    //     err.response?.data?.message || "Login failed. Please try again.",
+    //   );
+    // } finally {
+    //   setLoading(false);
+    // }
+    loginMutation.mutate(data);
   };
 
   return (

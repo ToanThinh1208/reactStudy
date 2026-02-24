@@ -9,7 +9,7 @@ import { Badge } from "@/components/UI/badge";
 import { Button } from "@/components/UI/button";
 import { Loader2, Calendar, Clock, BookOpen, Flame } from "lucide-react";
 import { EmptyState, ErrorState, LoadingState } from "../UI/StatusState";
-import { useRituals } from "@/hooks/rituals";
+import { useRituals } from "@/hooks/useRituals";
 import type { Ritual } from "@/lib/api/rituals.api";
 
 const RitualPage = () => {
