@@ -44,7 +44,7 @@ export const useLoginMutation = () => {
     onSuccess: (tokens: { accessToken: string; refreshToken: string }) => {
       toast.success("Login thành công");
       setTokens(tokens.accessToken, tokens.refreshToken);
-      navigate(from, { replace: true });
+      navigate(from, { replace: true }); // cho phép quay về trang trước đó
     },
 
     onError: (err: any) => {
